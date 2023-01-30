@@ -34,8 +34,8 @@ export default function Home() {
             <Typography.Title level={1} style={headingStyle}>
               Build the form
             </Typography.Title>
-            <Typography.Paragraph style={{ lineHeight: 1.7 }}>
-              Write a document using the rich text editor. Add
+            <Typography.Paragraph style={{ fontSize: 16 }}>
+              Write a document using the rich text editor. Add{" "}
               <Tag style={{ padding: "0 2px", margin: 0 }} color={"blue"}>
                 [parameterized field]
               </Tag>{" "}
@@ -51,7 +51,7 @@ export default function Home() {
               can add a dropdown field with options like "Yes" and "No". You can
               also add a text field, a date field, a number field, and more.
             </Typography.Paragraph>
-            <Typography.Paragraph style={{ lineHeight: 1.7 }}>
+            <Typography.Paragraph style={{ fontSize: 16 }}>
               When you are done with the form. You can click the{" "}
               <Button size="small" style={{ fontSize: 12, height: 20 }}>
                 Download Form
@@ -68,8 +68,7 @@ export default function Home() {
             <img
               style={{
                 width: "100%",
-                borderRadius: 8,
-                border: "1px solid #ccc",
+                borderRadius: 5,
               }}
               src="/images/build-printable-form.png"
             />
@@ -81,17 +80,16 @@ export default function Home() {
             <img
               style={{
                 width: "100%",
-                borderRadius: 8,
-                border: "1px solid #ccc",
+                borderRadius: 5,
               }}
               src="/images/fill-the-form.png"
             />
           </Col>
-          <Col md={8}>
+          <Col md={8} sm={24}>
             <Typography.Title level={1} style={headingStyle}>
               Fill the form
             </Typography.Title>
-            <Typography.Paragraph style={{ lineHeight: 1.7 }}>
+            <Typography.Paragraph style={{ fontSize: 16 }}>
               Load your form either from a URL or a file and start filling it.
               Hit the{" "}
               <Button
@@ -107,6 +105,29 @@ export default function Home() {
             <Link href={"/form"}>
               <Button type="primary">Fill a form →</Button>
             </Link>
+          </Col>
+        </Row>
+        <Divider style={{ margin: "32px 0" }} />
+        <Row gutter={[32, 32]}>
+          <Col md={8} sm={24}>
+            <Typography.Title level={1} style={headingStyle}>
+              Print the document
+            </Typography.Title>
+            <Typography.Paragraph style={{ fontSize: 16 }}>
+              A new window will popup with the filled form. A print dialog will
+              appear. You can choose to print the document or save it as a PDF
+              file.
+            </Typography.Paragraph>
+          </Col>
+
+          <Col md={16} sm={24}>
+            <img
+              style={{
+                width: "100%",
+                borderRadius: 6,
+              }}
+              src="/images/print-the-form.png"
+            />
           </Col>
         </Row>
         <Divider style={{ margin: "32px 0" }} />
