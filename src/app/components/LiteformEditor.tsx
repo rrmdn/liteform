@@ -57,6 +57,7 @@ import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import "./fields/loader";
 import builder from "./fields/builder";
+import EditMetadata from "./EditMetadata";
 
 function FieldCreationPopover(props: {
   onCreate: (name: string, type: string) => void;
@@ -268,6 +269,9 @@ export function LiteformRichText(props: { width: number }) {
                 <Button size="small" onClick={handleDownloadForm}>
                   Download Form
                 </Button>
+              </Button.Group>
+              <Button.Group>
+                <EditMetadata />
               </Button.Group>
             </Space>
           </Col>

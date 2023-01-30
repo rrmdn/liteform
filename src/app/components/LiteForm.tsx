@@ -1,32 +1,16 @@
-import { Button, Col, Form, Row, Space, Typography } from "antd";
-import { useForm, UseFormReturn } from "react-hook-form";
+import { Button, Form, Row, Space, Typography } from "antd";
+import { useForm } from "react-hook-form";
 import "./fields/loader";
-import builder from "./fields/builder";
-import { FormContext, FormField } from "./LiteformContext";
-import { Node } from "../FactoryBuilder";
+import { FormContext, LiteformMode } from "./LiteformContext";
 import FormLoader from "./FormLoader";
-
-function LiteformInput(props: {
-  field: FormField;
-  form: UseFormReturn<Record<string, any>>;
-}) {
-  const FieldFactory = builder.factories[props.field.type];
-  const node: Node = {
-    ...props.field,
-    value: props.form.watch(props.field.id),
-  };
-  return (
-    <Col md={12} sm={24} xs={24}>
-      <Form.Item label={props.field.name}>
-        <FieldFactory.ValueEditor form={props.form} node={node} />
-      </Form.Item>
-    </Col>
-  );
-}
+import LiteformInput from "./LiteformInput";
 
 export default function LiteForm() {
   const fields = FormContext.useSelectState((state) => state.form.fields);
   const title = FormContext.useSelectState((state) => state.form.name);
+  const description = FormContext.useSelectState(
+    (state) => state.form.description
+  );
   const rawForm = FormContext.useSelectState((state) => state.form);
   const form = useForm({
     defaultValues: Object.values(fields).reduce(
@@ -65,6 +49,7 @@ export default function LiteForm() {
         }}
       >
         <Typography.Title level={3}>{title}</Typography.Title>
+        <Typography.Paragraph>{description}</Typography.Paragraph>
         <Row gutter={16}>
           {Object.values(fields).map((field) => (
             <LiteformInput form={form} field={field} key={field.id} />

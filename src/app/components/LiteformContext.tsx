@@ -183,14 +183,14 @@ export const defaultForm: LiteformForm = {
       type: "select",
       name: "will",
       options: { options: ["will", "will not"], default: "will not" },
-      default: "will"
+      default: "will",
     },
     sZrfz5: {
       id: "sZrfz5",
       type: "text",
       name: "the_state",
       options: { max: 50 },
-      default: "The Republic of Indonesia"
+      default: "The Republic of Indonesia",
     },
     v9w6DI: { id: "v9w6DI", type: "text", name: "day", options: { max: 50 } },
     "9RBC_U": {
@@ -272,6 +272,12 @@ export const FormContext = createContext(
     setMode(mode: LiteformMode) {
       modify((state) => {
         state.mode = mode;
+      });
+    },
+    setMetadata(metadata: Pick<LiteformForm, "name" | "description">) {
+      modify((state) => {
+        state.form.name = metadata.name;
+        state.form.description = metadata.description;
       });
     },
   })
