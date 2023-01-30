@@ -447,6 +447,11 @@ export const FormContext = createContext(
         state.form.fields[field.id] = field;
       });
     },
+    deleteField: (id: string) => {
+      modify((state) => {
+        delete state.form.fields[id];
+      });
+    },
     updateResponse: (id: string, value: any) => {
       modify((state) => {
         state.response!.responses[id] = value;

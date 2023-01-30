@@ -181,16 +181,16 @@ export function LiteformRichText(props: { width: number }) {
     (props: RenderLeafProps) => <Leaf {...props} />,
     []
   );
+  const formActions = FormContext.useActions();
 
   const editor = React.useMemo(
-    () => withFields(withTables(withReact(createEditor()))),
+    () => withFields(formActions)(withTables(withReact(createEditor()))),
     []
   );
 
   const rawForm = FormContext.useSelectState((state) => state.form);
   const formValue = FormContext.useSelectState((state) => state.form.source);
   const mode = FormContext.useSelectState((state) => state.mode);
-  const formActions = FormContext.useActions();
 
   const handleDownloadForm = React.useCallback(() => {
     const downloadLink = document.createElement("a");
@@ -301,55 +301,82 @@ export function LiteformRichText(props: { width: number }) {
   );
 }
 
-const withFields = (editor: Editor) => {
-  const { isInline, markableVoid, isVoid, deleteFragment, deleteBackward, deleteForward } = editor;
+const withFields =
+  (formActions: ReturnType<typeof FormContext["useActions"]>) =>
+  (editor: Editor) => {
+    const {
+      isInline,
+      markableVoid,
+      isVoid,
+      deleteFragment,
+      deleteBackward,
+      deleteForward,
+    } = editor;
 
-  editor.isInline = (element) => {
-    return SlateElement.isElementType(element, "field")
-      ? true
-      : isInline(element);
-  };
+    editor.isInline = (element) => {
+      return SlateElement.isElementType(element, "field")
+        ? true
+        : isInline(element);
+    };
 
-  editor.isVoid = (element) => {
-    return SlateElement.isElementType(element, "field")
-      ? true
-      : isVoid(element);
-  };
+    editor.isVoid = (element) => {
+      return SlateElement.isElementType(element, "field")
+        ? true
+        : isVoid(element);
+    };
 
-  editor.markableVoid = (element) => {
-    return (
-      SlateElement.isElementType(element, "field") || markableVoid(element)
-    );
-  };
+    editor.markableVoid = (element) => {
+      return (
+        SlateElement.isElementType(element, "field") || markableVoid(element)
+      );
+    };
 
-  editor.deleteBackward = (unit) => {
-    console.log("delete backward", unit)
-    deleteBackward(unit);
-  }
-
-
-  // run fields cleanup when a field is deleted
-  editor.deleteFragment = (direction) => {
-    console.log("delete fragment", direction)
-    const { selection } = editor;
-    if (selection) {
-      const [start, end] = Range.edges(selection);
-
-      let current = start as BasePoint | undefined;
-      while (current && !Point.equals(current, end)) {
-        const [node] = Editor.node(editor, current);
-        if (SlateElement.isElementType(node, "field")) {
-          const [fieldNode] = Editor.node(editor, current);
-          console.log("deleted field", fieldNode);
+    editor.deleteBackward = (unit) => {
+      const { selection } = editor;
+      if (selection) {
+        const position = Editor.before(editor, selection, { unit });
+        if (position) {
+          const [parent] = Editor.parent(editor, position);
+          if (SlateElement.isElementType(parent, "field") && parent.field_id) {
+            formActions.deleteField(parent.field_id);
+          }
         }
-        current = Editor.after(editor, current);
       }
-    }
-    deleteFragment(direction);
-  };
+      deleteBackward(unit);
+    };
 
-  return editor;
-};
+    editor.deleteForward = (unit) => {
+      const { selection } = editor;
+      if (selection) {
+        const position = Editor.after(editor, selection, { unit });
+        if (position) {
+          const [parent] = Editor.parent(editor, position);
+          if (SlateElement.isElementType(parent, "field") && parent.field_id) {
+            formActions.deleteField(parent.field_id);
+          }
+        }
+      }
+      deleteForward(unit);
+    };
+
+    editor.deleteFragment = (direction) => {
+      const { selection } = editor;
+      if (selection) {
+        const nodes = Editor.nodes(editor, {
+          at: selection,
+          match: (n) => SlateElement.isElementType(n, "field"),
+        });
+        for (const [node, path] of nodes) {
+          if (SlateElement.isElementType(node, "field") && node.field_id) {
+            formActions.deleteField(node.field_id);
+          }
+        }
+      }
+      deleteFragment(direction);
+    };
+
+    return editor;
+  };
 
 const insertField = (editor: Editor, name: string, field_id: string) => {
   const input: CustomElement = {

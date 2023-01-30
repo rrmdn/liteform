@@ -4,7 +4,6 @@ import "./fields/loader";
 import builder from "./fields/builder";
 import { FormContext, FormField } from "./LiteformContext";
 import { Node } from "../FactoryBuilder";
-import QueryString from "qs";
 import FormLoader from "./FormLoader";
 
 function LiteformInput(props: {
