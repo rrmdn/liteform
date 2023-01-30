@@ -4,7 +4,7 @@
   "description": "Build printable forms with ease",
   "main": "index.js",
   "author": "Rizki Romadhoni",
-  "license": "MIT",
+  "license": "AGPL-3.0",
   "dependencies": {
     "@sinclair/typebox": "^0.25.21",
     "antd": "^5.1.5",
