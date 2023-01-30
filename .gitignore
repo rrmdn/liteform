@@ -5,3 +5,8 @@ out
 dist
 .vscode
 .env
+# Sentry
+.sentryclirc
+
+# Sentry
+next.config.original.js

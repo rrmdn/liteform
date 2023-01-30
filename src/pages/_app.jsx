@@ -7,6 +7,8 @@ import {
   Typography,
   Button,
   Space,
+  Col,
+  Row,
 } from "antd";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -88,44 +90,62 @@ export default function App({ Component, pageProps }) {
           <div
             style={{ maxWidth: 1024, margin: "0 auto", padding: "8px 16px" }}
           >
-            <Space>
-              <Link href="/">
-                <Button
-                  type="link"
-                  size="small"
-                  style={{ ...headingStyle, fontWeight: "bold" }}
-                >
-                  LITEFORM
-                </Button>
-              </Link>
-              <Link href="/#examples">
-                <Button
-                  style={{ color: "#666", fontWeight: "500" }}
-                  type="link"
-                  size="small"
-                >
-                  Examples
-                </Button>
-              </Link>
-              <Link href="/editor">
-                <Button
-                  style={{ color: "#666", fontWeight: "500" }}
-                  type="link"
-                  size="small"
-                >
-                  Editor
-                </Button>
-              </Link>
-              <Link href="/form">
-                <Button
-                  style={{ color: "#666", fontWeight: "500" }}
-                  type="link"
-                  size="small"
-                >
-                  Form
-                </Button>
-              </Link>
-            </Space>
+            <Row>
+              <Col>
+                <Space>
+                  <Link href="/">
+                    <Button
+                      type="link"
+                      size="small"
+                      style={{ ...headingStyle, fontWeight: "bold", paddingLeft: 0 }}
+                    >
+                      LITEFORM
+                    </Button>
+                  </Link>
+                  <Link href="/#examples">
+                    <Button
+                      style={{ color: "#666", fontWeight: "500" }}
+                      type="link"
+                      size="small"
+                    >
+                      Examples
+                    </Button>
+                  </Link>
+                  <Link href="/editor">
+                    <Button
+                      style={{ color: "#666", fontWeight: "500" }}
+                      type="link"
+                      size="small"
+                    >
+                      Editor
+                    </Button>
+                  </Link>
+                  <Link href="/form">
+                    <Button
+                      style={{ color: "#666", fontWeight: "500" }}
+                      type="link"
+                      size="small"
+                    >
+                      Form
+                    </Button>
+                  </Link>
+                </Space>
+              </Col>
+              <Col flex={1}></Col>
+              <Col>
+                <Space>
+                  <Button
+                    href="https://github.com/rrmdn/liteform/issues"
+                    type="link"
+                    size="small"
+                    target="_blank"
+                    style={{paddingRight: 0}}
+                  >
+                    Report a bug
+                  </Button>
+                </Space>
+              </Col>
+            </Row>
           </div>
         </div>
       ) : null}
