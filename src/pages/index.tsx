@@ -1,5 +1,18 @@
-import { Button, Col, Divider, Layout, Row, Tag, Typography } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Divider,
+  Layout,
+  Row,
+  Space,
+  Tag,
+  Typography,
+} from "antd";
 import Link from "next/link";
+import fs, { readFileSync } from "fs";
+import path from "path";
+import { LiteformForm } from "../app/components/LiteformContext";
 
 const headingStyle = {
   backgroundImage: "linear-gradient(60deg, #3a47d5 0%, #00d2ff 100%)",
@@ -8,7 +21,7 @@ const headingStyle = {
   WebkitBackgroundClip: "text",
 };
 
-export default function Home() {
+export default function Home(props: { forms: LiteformForm[] }) {
   return (
     <div style={{}}>
       <div
@@ -131,7 +144,58 @@ export default function Home() {
           </Col>
         </Row>
         <Divider style={{ margin: "32px 0" }} />
+        <Row>
+          <Col span={24}>
+            <Typography.Title level={1} style={headingStyle}>
+              Examples
+            </Typography.Title>
+            <Typography.Paragraph style={{ fontSize: 16 }}>
+              Here are some examples of forms built with LiteForm.
+            </Typography.Paragraph>
+            <Row gutter={[32, 32]}>
+              {props.forms.map((form) => (
+                <Col md={8} sm={24} key={form.id}>
+                  <Card title={form.name}>
+                    <Typography.Paragraph style={{ fontSize: 16 }}>
+                      {form.description}
+                    </Typography.Paragraph>
+                    <Space>
+                      <Link href={`/form?form_url=/forms/form-${form.id}.json`}>
+                        <Button type="primary" size="small">
+                          Fill
+                        </Button>
+                      </Link>
+                      <Link
+                        href={`/editor?form_url=/forms/form-${form.id}.json`}
+                      >
+                        <Button size="small">Copy</Button>
+                      </Link>
+                    </Space>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          </Col>
+        </Row>
       </div>
     </div>
   );
+}
+
+export async function getStaticProps() {
+  const files = fs.readdirSync(path.join(process.cwd(), "public", "forms"));
+  const jsonContents = files
+    .filter((file) => file.endsWith(".json"))
+    .map((file) =>
+      readFileSync(path.join(process.cwd(), "public", "forms", file), "utf-8")
+    );
+  const forms = jsonContents.map(
+    (content) => JSON.parse(content) as LiteformForm
+  );
+
+  return {
+    props: {
+      forms,
+    },
+  };
 }

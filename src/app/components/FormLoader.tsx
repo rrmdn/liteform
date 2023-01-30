@@ -1,11 +1,4 @@
-import {
-  Button,
-  Col,
-  Input,
-  Radio,
-  Row, Upload,
-  UploadFile
-} from "antd";
+import { Button, Col, Input, Radio, Row, Upload, UploadFile } from "antd";
 import React from "react";
 import { TbFileUpload, TbLink } from "react-icons/tb";
 import { FormContext } from "./LiteformContext";
@@ -14,7 +7,7 @@ export default function FormLoader() {
   const [state, setState] = React.useState({
     from: "url" as "url" | "file",
     url: "",
-    fileList: [] as UploadFile<any>[]
+    fileList: [] as UploadFile<any>[],
   });
   const formContext = FormContext.useActions();
   React.useEffect(() => {
@@ -26,8 +19,7 @@ export default function FormLoader() {
         });
     } else {
       const file = state.fileList[0]?.originFileObj;
-      if (!file)
-        return;
+      if (!file) return;
       const reader = new FileReader();
       reader.onload = (e) => {
         const form = JSON.parse(e.target?.result as string);
@@ -37,11 +29,23 @@ export default function FormLoader() {
     }
   }, [state.from, state.url, state.fileList]);
 
+  React.useEffect(() => {
+    const url = new URL(window.location.href);
+    const formUrl = url.searchParams.get("form_url");
+    if (formUrl) {
+      setState({
+        ...state,
+        from: "url",
+        url: formUrl,
+      });
+    }
+  }, []);
+
   return (
     <Row
       gutter={[12, 12]}
       style={{
-        padding: "0 16px"
+        padding: "0 16px",
       }}
     >
       <Col>
@@ -51,7 +55,7 @@ export default function FormLoader() {
           onChange={(e) => {
             setState({
               ...state,
-              from: e.target.value
+              from: e.target.value,
             });
           }}
         >
@@ -68,9 +72,10 @@ export default function FormLoader() {
             onChange={(e) => {
               setState({
                 ...state,
-                url: e.target.value
+                url: e.target.value,
               });
-            }} />
+            }}
+          />
         ) : (
           <Upload
             accept=".json"
@@ -78,7 +83,7 @@ export default function FormLoader() {
             onChange={(info) => {
               setState({
                 ...state,
-                fileList: info.fileList
+                fileList: info.fileList,
               });
             }}
           >
