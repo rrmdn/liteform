@@ -45,8 +45,6 @@ export default function LiteForm() {
         layout="vertical"
         size="small"
         onSubmitCapture={(e) => {
-          console.log(form.getValues());
-          return;
           const printWindow = window.open(
             `/print`,
             "_blank",
