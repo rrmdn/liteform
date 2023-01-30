@@ -5,11 +5,11 @@ export default function Form() {
   return (
     <div
       style={{
-        maxWidth: 800,
+        maxWidth: 1024,
         margin: "0 auto",
-        padding: "16px 0",
       }}
     >
+      <div style={{ height: 52 }}></div>
       <FormContext.Provider>
         <LiteForm />
       </FormContext.Provider>

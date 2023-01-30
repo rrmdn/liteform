@@ -1,8 +1,21 @@
 import "antd/dist/reset.css";
-import { ConfigProvider } from "antd";
+import {
+  ConfigProvider,
+  Layout,
+  Menu,
+  Breadcrumb,
+  Typography,
+  Button,
+  Space,
+} from "antd";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { headingStyle } from ".";
 
 export default function App({ Component, pageProps }) {
+  const router = useRouter();
+
   return (
     <ConfigProvider
       theme={{
@@ -14,7 +27,10 @@ export default function App({ Component, pageProps }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="The future of digital forms" />
         <meta name="author" content="Rizki Romadhoni" />
-        <meta property="og:image" content="https://liteform.digital/images/build-printable-form.png" />
+        <meta
+          property="og:image"
+          content="https://liteform.digital/images/build-printable-form.png"
+        />
         <meta
           property="og:title"
           content="LiteForm | Build printable forms with ease"
@@ -31,7 +47,10 @@ export default function App({ Component, pageProps }) {
           name="twitter:description"
           content="The future of digital forms"
         />
-        <meta name="twitter:image" content="https://liteform.digital/images/build-printable-form.png" />
+        <meta
+          name="twitter:image"
+          content="https://liteform.digital/images/build-printable-form.png"
+        />
 
         <link
           rel="apple-touch-icon"
@@ -53,6 +72,63 @@ export default function App({ Component, pageProps }) {
         <link rel="manifest" href="/site.webmanifest"></link>
       </Head>
       <Component {...pageProps} />
+
+      {router.pathname !== "/print" ? (
+        <div
+          style={{
+            position: "fixed",
+            height: 40,
+            background: "#ffffff",
+            top: 0,
+            left: 0,
+            right: 0,
+            boxShadow: "0 2px 8px #f0f1f2",
+          }}
+        >
+          <div
+            style={{ maxWidth: 1024, margin: "0 auto", padding: "8px 16px" }}
+          >
+            <Space>
+              <Link href="/">
+                <Button
+                  type="link"
+                  size="small"
+                  style={{ ...headingStyle, fontWeight: "bold" }}
+                >
+                  LITEFORM
+                </Button>
+              </Link>
+              <Link href="/#examples">
+                <Button
+                  style={{ color: "#666", fontWeight: "500" }}
+                  type="link"
+                  size="small"
+                >
+                  Examples
+                </Button>
+              </Link>
+              <Link href="/editor">
+                <Button
+                  style={{ color: "#666", fontWeight: "500" }}
+                  type="link"
+                  size="small"
+                >
+                  Editor
+                </Button>
+              </Link>
+              <Link href="/form">
+                <Button
+                  style={{ color: "#666", fontWeight: "500" }}
+                  type="link"
+                  size="small"
+                >
+                  Form
+                </Button>
+              </Link>
+            </Space>
+          </div>
+        </div>
+      ) : null}
     </ConfigProvider>
   );
 }

@@ -13,8 +13,10 @@ import Link from "next/link";
 import fs, { readFileSync } from "fs";
 import path from "path";
 import { LiteformForm } from "../app/components/LiteformContext";
+import SimpleBar from "simplebar-react";
+import "simplebar-react/dist/simplebar.min.css";
 
-const headingStyle = {
+export const headingStyle = {
   backgroundImage: "linear-gradient(60deg, #3a47d5 0%, #00d2ff 100%)",
   color: "transparent",
   backgroundClip: "text",
@@ -23,7 +25,11 @@ const headingStyle = {
 
 export default function Home(props: { forms: LiteformForm[] }) {
   return (
-    <div style={{}}>
+    <SimpleBar
+      style={{
+        maxHeight: "100vh",
+      }}
+    >
       <div
         style={{
           maxWidth: 1024,
@@ -144,7 +150,7 @@ export default function Home(props: { forms: LiteformForm[] }) {
           </Col>
         </Row>
         <Divider style={{ margin: "32px 0" }} />
-        <Row>
+        <Row id="examples">
           <Col span={24}>
             <Typography.Title level={1} style={headingStyle}>
               Examples
@@ -178,7 +184,7 @@ export default function Home(props: { forms: LiteformForm[] }) {
           </Col>
         </Row>
       </div>
-    </div>
+    </SimpleBar>
   );
 }
 

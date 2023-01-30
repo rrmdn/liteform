@@ -9,8 +9,10 @@ export default function Home() {
         position: "relative",
         height: "100vh",
         overflow: "hidden",
+        padding: "0 16px",
       }}
     >
+      <div style={{height: 40}}></div>
       <LiteformEditor width={640} />
     </div>
   );
