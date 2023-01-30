@@ -1,4 +1,4 @@
-import { DatePicker, Form, Input, Typography } from "antd";
+import { DatePicker, Form, Input, Select, Typography } from "antd";
 import dayjs from "dayjs";
 import React from "react";
 import { Controller } from "react-hook-form";
@@ -7,23 +7,27 @@ import builder from "./builder";
 export default builder
   .from({
     value: dayjs().toDate(),
-    options: { before: dayjs().subtract(3, "days").toDate() },
+    options: { format: "DD/MM/YYYY" },
   })
   .build(
     () => ({
       OptionsEditor: (props) => {
         return (
-          <Form.Item label="Max character">
+          <Form.Item label="Date format">
             <Controller
               control={props.form.control}
-              name="options.before"
+              name="options.format"
               render={({ field }) => (
-                <DatePicker
-                  size="small"
-                  placeholder={field.name}
-                  onChange={(date) => field.onChange(date?.toDate())}
-                  value={dayjs(field.value)}
+                <Select
+                  placeholder={"Select date format"}
+                  onChange={field.onChange}
                   onBlur={field.onBlur}
+                  value={field.value}
+                  options={[
+                    { label: "DD/MM/YYYY", value: "DD/MM/YYYY" },
+                    { label: "MM/DD/YYYY", value: "MM/DD/YYYY" },
+                    { label: "YYYY/MM/DD", value: "YYYY/MM/DD" },
+                  ]}
                 />
               )}
             />
@@ -35,17 +39,12 @@ export default builder
           <Controller
             control={props.form.control}
             name={props.node.name}
-            rules={{
-              validate: (value) => {
-                return value && value >= props.node.options.before;
-              },
-            }}
             render={({ field }) => (
               <DatePicker
                 size="small"
                 placeholder={`Enter ${props.node.name}`}
                 onChange={(date) => field.onChange(date?.toDate())}
-                value={dayjs(field.value)}
+                value={field.value ? dayjs(field.value) : undefined}
                 onBlur={field.onBlur}
               />
             )}
@@ -56,10 +55,10 @@ export default builder
         const date = React.useMemo(() => {
           const parsed = dayjs(props.node.value);
           return parsed.isValid()
-            ? parsed.toDate().toLocaleDateString()
+            ? parsed.format(props.node.options.format)
             : `[empty date]`;
         }, [props.node?.value]);
-        return <Typography.Text>{date}</Typography.Text>;
+        return <span {...props.attributes}>{date}</span>;
       },
     }),
     {

@@ -29,8 +29,14 @@ export default function LiteForm() {
   const title = FormContext.useSelectState((state) => state.form.name);
   const rawForm = FormContext.useSelectState((state) => state.form);
   const form = useForm({
-    defaultValues: {},
-    mode: "onBlur",
+    defaultValues: Object.values(fields).reduce(
+      (values, field) => ({
+        ...values,
+        [field.name]: field.default,
+      }),
+      {}
+    ),
+    mode: "onChange",
   });
   return (
     <>
@@ -39,6 +45,8 @@ export default function LiteForm() {
         layout="vertical"
         size="small"
         onSubmitCapture={(e) => {
+          console.log(form.getValues());
+          return;
           const printWindow = window.open(
             `/print`,
             "_blank",

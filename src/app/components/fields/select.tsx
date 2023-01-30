@@ -3,11 +3,10 @@ import { Controller } from "react-hook-form";
 import builder from "./builder";
 
 export default builder
-  .from({ options: { options: ["Yes", "No"], default: "Yes" }, value: "Yes" })
+  .from({ options: { options: ["Yes", "No"] }, value: "Yes" })
   .build(
     () => ({
       OptionsEditor: (props) => {
-        const options = props.form.watch("options.options");
         return (
           <>
             <Form.Item label="Options">
@@ -21,24 +20,6 @@ export default builder
                     placeholder={`Select ${props.node.name}`}
                     onChange={field.onChange}
                     value={field.value.map((option) => ({ value: option }))}
-                    onBlur={field.onBlur}
-                  />
-                )}
-              />
-            </Form.Item>
-            <Form.Item label="Default selected">
-              <Controller
-                control={props.form.control}
-                name="options.default"
-                render={({ field }) => (
-                  <Select
-                    style={{ width: "200px" }}
-                    placeholder={`Select ${props.node.name}`}
-                    onChange={field.onChange}
-                    value={field.value}
-                    options={options.map((option) => ({
-                      value: option,
-                    }))}
                     onBlur={field.onBlur}
                   />
                 )}
@@ -58,7 +39,7 @@ export default builder
                   onChange={field.onChange}
                   onBlur={field.onBlur}
                   value={field.value}
-                  defaultValue={props.node.options.default}
+                  defaultValue={props.node.default}
                   placeholder={`Select ${props.node.name}`}
                   options={props.node.options.options.map((option) => ({
                     value: option,
@@ -71,10 +52,10 @@ export default builder
       },
       ValueRenderer: (props) => {
         return (
-          <>
+          <span {...props.attributes}>
             {props.node.options.options
               .map((option) => (
-                <Typography.Text
+                <span
                   style={{
                     textDecoration:
                       option === props.node.value
@@ -83,16 +64,14 @@ export default builder
                   }}
                 >
                   {option}
-                </Typography.Text>
+                </span>
               ))
               .reduce(
                 (prev, curr) =>
-                  prev.length > 0
-                    ? [...prev, <Typography.Text> / </Typography.Text>, curr]
-                    : [curr],
+                  prev.length > 0 ? [...prev, <span> / </span>, curr] : [curr],
                 [] as JSX.Element[]
               )}
-          </>
+          </span>
         );
       },
     }),

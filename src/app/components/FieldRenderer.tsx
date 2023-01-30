@@ -14,13 +14,26 @@ function FieldEditor(props: { fieldId: string; children: React.ReactNode }) {
   );
   const formActions = FormContext.useActions();
   const FieldFactory = builder.factories[field.type];
-  const form = useForm({
-    defaultValues: { options: field.options, name: field.name },
+  const form = useForm<
+    Pick<typeof field, "options" | "name"> & {
+      value: typeof field["default"];
+    }
+  >({
+    defaultValues: {
+      options: field.options,
+      name: field.name,
+      value: field.default,
+    },
     mode: "onBlur",
   });
   const [state, setState] = React.useState({
     isOpen: false,
   });
+  const options = form.watch("options");
+  const valueEditorNode = React.useMemo(
+    () => ({ ...FieldFactory.defaultNode, options }),
+    [options, FieldFactory]
+  );
   if (!FieldFactory) return null;
   return (
     <Popover
@@ -39,8 +52,16 @@ function FieldEditor(props: { fieldId: string; children: React.ReactNode }) {
         >
           <FieldFactory.OptionsEditor
             node={FieldFactory.defaultNode}
+            // @ts-ignore
             form={form}
           />
+          <Form.Item label="Default value">
+            <FieldFactory.ValueEditor
+              node={valueEditorNode}
+              // @ts-ignore
+              form={form}
+            />
+          </Form.Item>
           <Form.Item>
             <Button size="small" htmlType="submit" type="primary">
               Save
@@ -66,7 +87,7 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   );
 }
 
-const ValueRenderer = (props: { field: FormField }) => {
+const ValueRenderer = (props: { field: FormField, attributes: RenderElementProps['attributes'] }) => {
   const FieldFactory = builder.factories[props.field.type];
   const value = FormContext.useSelectState(
     (state) =>
@@ -77,7 +98,7 @@ const ValueRenderer = (props: { field: FormField }) => {
     value,
   };
   if (!FieldFactory) return null;
-  return <FieldFactory.ValueRenderer node={node} />;
+  return <FieldFactory.ValueRenderer attributes={props.attributes} node={node} />;
 };
 
 function FieldRenderer(props: RenderElementProps) {
@@ -88,7 +109,7 @@ function FieldRenderer(props: RenderElementProps) {
   const mode = FormContext.useSelectState((state) => state.mode);
 
   if (mode === LiteformMode.RESPONSE) {
-    return <ValueRenderer field={field} />;
+    return <ValueRenderer attributes={props.attributes} field={field} />;
   }
 
   return (

@@ -16,7 +16,7 @@ export default builder
                 render={({ field }) => (
                   <Input
                     type="number"
-                    placeholder={field.name}
+                    placeholder={"50"}
                     onChange={field.onChange}
                     value={field.value}
                     onBlur={field.onBlur}
@@ -24,13 +24,13 @@ export default builder
                 )}
               />
             </Form.Item>
-            <Form.Item label="Column">
+            <Form.Item label="Input type">
               <Controller
                 control={props.form.control}
                 name="options.input"
                 render={({ field }) => (
                   <Select
-                    placeholder={field.name}
+                    placeholder={"Select input type"}
                     onChange={field.onChange}
                     onBlur={field.onBlur}
                     value={field.value}
@@ -74,7 +74,7 @@ export default builder
         );
       },
       ValueRenderer: (props) => {
-        return <Typography.Text>{props.node.value}</Typography.Text>;
+        return <span {...props.attributes}>{props.node.value}</span>;
       },
     }),
     {

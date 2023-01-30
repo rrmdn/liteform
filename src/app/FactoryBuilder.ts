@@ -1,8 +1,9 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
+import { RenderElementProps } from "slate-react";
 import { FormField } from "./components/LiteformContext";
 
-export type Node<TOpt = any, TVal = any> = FormField<TOpt> & {
+export type Node<TOpt = any, TVal = any> = FormField<TOpt, TVal> & {
   value?: TVal;
 };
 
@@ -13,7 +14,7 @@ type Factory<TOpt, TVal> = {
   defaultNode: Node<TOpt, TVal>;
   OptionsEditor: React.FC<{
     node: Node<TOpt, TVal>;
-    form: UseFormReturn<Pick<Node<TOpt, TVal>, "options" | "name">>;
+    form: UseFormReturn<Pick<Node<TOpt, TVal>, "options" | "name" | "default">>;
   }>;
   ValueEditor: React.FC<{
     node: Node<TOpt, TVal>;
@@ -22,6 +23,7 @@ type Factory<TOpt, TVal> = {
   ValueRenderer: React.FC<{
     node: Pick<Node<TOpt, TVal>, "value" | "options">;
     style?: React.CSSProperties;
+    attributes: RenderElementProps['attributes']
   }>;
 };
 
