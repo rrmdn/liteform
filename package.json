@@ -1,7 +1,7 @@
 {
   "name": "liteform",
   "version": "0.0.1",
-  "description": "The future of digital forms",
+  "description": "Build printable forms with ease",
   "main": "index.js",
   "author": "Rizki Romadhoni",
   "license": "MIT",
