@@ -87,7 +87,7 @@ export default function Home(props: { forms: LiteformForm[] }) {
             <img
               style={{
                 width: "100%",
-                borderRadius: 5,
+                borderRadius: 4,
               }}
               src="/images/build-printable-form.png"
             />
@@ -99,7 +99,7 @@ export default function Home(props: { forms: LiteformForm[] }) {
             <img
               style={{
                 width: "100%",
-                borderRadius: 5,
+                borderRadius: 4,
               }}
               src="/images/fill-the-form.png"
             />

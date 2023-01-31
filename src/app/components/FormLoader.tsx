@@ -1,7 +1,8 @@
 import { Button, Col, Input, Radio, Row, Upload, UploadFile } from "antd";
+import axios from "axios";
 import React from "react";
 import { TbFileUpload, TbLink } from "react-icons/tb";
-import { FormContext } from "./LiteformContext";
+import { FormContext, LiteformCompiler, LiteformForm } from "./LiteformContext";
 
 export default function FormLoader() {
   const [state, setState] = React.useState({
@@ -12,11 +13,11 @@ export default function FormLoader() {
   const formContext = FormContext.useActions();
   React.useEffect(() => {
     if (state.from === "url") {
-      fetch(state.url)
-        .then((res) => res.json())
-        .then((form) => {
-          formContext.setForm(form);
-        });
+      axios.get(state.url).then((res) => {
+        if (LiteformCompiler.Check(res.data)) {
+          formContext.setForm(res.data);
+        }
+      });
     } else {
       const file = state.fileList[0]?.originFileObj;
       if (!file) return;

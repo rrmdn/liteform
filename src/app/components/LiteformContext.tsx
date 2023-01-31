@@ -1,6 +1,8 @@
 import { nanoid } from "nanoid";
 import { createContext } from "react-immersive";
 import { Descendant } from "slate";
+import { TypeCompiler } from "@sinclair/typebox/compiler";
+import { Type } from "@sinclair/typebox";
 
 export type Identity = {
   email: string;
@@ -23,6 +25,18 @@ export type LiteformForm = {
   fields: Record<string, FormField>;
   owner: Identity;
 };
+
+export const LiteformCompiler = TypeCompiler.Compile(Type.Object({
+  id: Type.String(),
+  name: Type.String(),
+  description: Type.String(),
+  source: Type.Array(Type.Any()),
+  fields: Type.Record(Type.String(), Type.Any()),
+  owner: Type.Object({
+    email: Type.String(),
+    name: Type.String(),
+  }),
+}))
 
 export type LiteformResponse = {
   id: string;
