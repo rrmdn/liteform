@@ -183,6 +183,32 @@ export default function Home(props: { forms: LiteformForm[] }) {
             </Row>
           </Col>
         </Row>
+        <Divider style={{ margin: "32px 0" }} />
+        <Row id="about">
+          <Col span={24}>
+            <Typography.Title level={1} style={headingStyle}>
+              About
+            </Typography.Title>
+            <Typography.Paragraph style={{ fontSize: 16 }}>
+              LiteForm is a free and open source project. You can find the code
+              on{" "}
+              <a href="https://github.com/rrmdn/liteform" target="_blank">
+                GitHub
+              </a>
+              .
+            </Typography.Paragraph>
+            <Typography.Paragraph style={{ color: "#666" }}>
+              LiteForm is built by{" "}
+              <a href="https://rrmdn.com">Rizki Romadhoni</a> following his idea
+              on{" "}
+              <a href="https://rrmdn.com/posts/how-digital-form-should-be">
+                How I Imagine the Future of Digital Forms
+              </a>
+              . It is far from ideal but let's see what we can do with it. Built
+              with Next.js, React, Slate.js and Ant Design.
+            </Typography.Paragraph>
+          </Col>
+        </Row>
       </div>
     </SimpleBar>
   );
