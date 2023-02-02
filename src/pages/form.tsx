@@ -1,5 +1,14 @@
+import React from "react";
 import LiteForm from "../app/components/LiteForm";
-import { FormContext } from "../app/components/LiteformContext";
+import { FormContext, LiteformMode } from "../app/components/LiteformContext";
+
+const LiteFormWrapper = () => {
+  const formActions = FormContext.useActions();
+  React.useEffect(() => {
+    formActions.setMode(LiteformMode.RESPONSE);
+  }, []);
+  return <LiteForm />;
+};
 
 export default function Form() {
   return (
@@ -11,7 +20,7 @@ export default function Form() {
     >
       <div style={{ height: 52 }}></div>
       <FormContext.Provider>
-        <LiteForm />
+        <LiteFormWrapper />
       </FormContext.Provider>
     </div>
   );

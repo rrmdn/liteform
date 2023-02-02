@@ -5,6 +5,7 @@ out
 dist
 .vscode
 .env
+.env.local
 # Sentry
 .sentryclirc
 

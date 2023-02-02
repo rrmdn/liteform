@@ -4,7 +4,6 @@ import "./fields/loader";
 import { FormContext, LiteformMode } from "./LiteformContext";
 import FormLoader from "./FormLoader";
 import LiteformInput from "./LiteformInput";
-import React from "react";
 
 export default function LiteForm() {
   const fields = FormContext.useSelectState((state) => state.form.fields);

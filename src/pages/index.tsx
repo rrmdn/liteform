@@ -166,13 +166,13 @@ export default function Home(props: { forms: LiteformForm[] }) {
                       {form.description}
                     </Typography.Paragraph>
                     <Space>
-                      <Link href={`/form?form_url=/forms/form-${form.id}.json`}>
+                      <Link href={`/form?from_url=/forms/form-${form.id}.json`}>
                         <Button type="primary" size="small">
                           Fill
                         </Button>
                       </Link>
                       <Link
-                        href={`/editor?form_url=/forms/form-${form.id}.json`}
+                        href={`/editor?from_url=/forms/form-${form.id}.json`}
                       >
                         <Button size="small">Copy</Button>
                       </Link>

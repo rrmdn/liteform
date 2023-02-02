@@ -5,6 +5,7 @@ import { TypeCompiler } from "@sinclair/typebox/compiler";
 import { Type } from "@sinclair/typebox";
 
 export type Identity = {
+  id: string;
   email: string;
   name: string;
 };
@@ -35,6 +36,7 @@ export const LiteformCompiler = TypeCompiler.Compile(Type.Object({
   owner: Type.Object({
     email: Type.String(),
     name: Type.String(),
+    id: Type.String(),
   }),
 }))
 
@@ -221,7 +223,7 @@ export const defaultForm: LiteformForm = {
       type: "date",
     },
   },
-  owner: { email: "", name: "" },
+  owner: { email: "", name: "", id: "" },
 };
 
 export const defaultResponse: LiteformResponse = {
@@ -232,6 +234,7 @@ export const defaultResponse: LiteformResponse = {
   respondent: {
     email: "",
     name: "",
+    id: ""
   },
 };
 
