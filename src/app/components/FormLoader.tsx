@@ -201,9 +201,9 @@ function CloudDocuments(props: {
   React.useEffect(
     function saveFormToCloud() {
       const timeout = setTimeout(() => {
-        setState({ isLoading: true });
         const documentsRef = collection(db, "documents");
         if (!props.docId || mode === LiteformMode.RESPONSE) return;
+        setState({ isLoading: true });
         const docRef = doc(documentsRef, props.docId);
         getDoc(docRef)
           .then((doc) => doc.exists())
