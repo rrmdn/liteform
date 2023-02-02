@@ -201,6 +201,7 @@ function CloudDocuments(props: {
   React.useEffect(
     function saveFormToCloud() {
       const timeout = setTimeout(() => {
+        setState({ isLoading: true });
         const documentsRef = collection(db, "documents");
         if (!props.docId || mode === LiteformMode.RESPONSE) return;
         const docRef = doc(documentsRef, props.docId);
@@ -210,6 +211,9 @@ function CloudDocuments(props: {
             setDoc(docRef, form).then(() => {
               documents.refetch();
             });
+          })
+          .finally(() => {
+            setState({ isLoading: false });
           });
       }, 1000);
       return () => {
