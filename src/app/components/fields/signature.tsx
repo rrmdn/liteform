@@ -1,18 +1,12 @@
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  Row,
-  Space,
-} from "antd";
+import { Button, Col, Form, Input, Row, Space } from "antd";
 import React from "react";
 import { Controller } from "react-hook-form";
 import SignaturePad from "signature_pad";
 import * as openpgp from "openpgp/lightweight";
 import builder from "./builder";
+import { FormContext } from "../LiteformContext";
 
-function RenderSignature(props: { src?: string; signature?: string }) {
+function RenderSignature(props: Partial<typeof defaultValue>) {
   return (
     <div style={{ position: "relative", width: 300, height: 150 }}>
       <img src={props.src} style={{ width: 300, height: 150 }} />
@@ -31,15 +25,20 @@ function RenderSignature(props: { src?: string; signature?: string }) {
           wordWrap: "break-word",
         }}
       >
-        <pre>{props.signature || "[unsigned]"}</pre>
+        <pre>{props.signature || "unsigned"}</pre>
+        <pre style={{ position: "absolute", bottom: 10, right: 10, left: 10 }}>
+          {props?.signed_at?.toISOString()}
+        </pre>
       </div>
     </div>
   );
 }
 
+const defaultValue = { src: "", signature: "unsigned", signed_at: new Date() };
+
 export default builder
   .from({
-    value: { src: "", signature: "Placeholder signature" },
+    value: defaultValue,
     options: { width: 240, height: 135 },
   })
   .build(
@@ -83,6 +82,7 @@ export default builder
       ValueEditor: (props) => {
         const canvasRef = React.useRef<HTMLCanvasElement>(null);
         const signatureRef = React.useRef<SignaturePad>();
+        const formId = FormContext.useSelectState((state) => state.form.id);
         const [state, setState] = React.useState({
           isEditing: false,
         });
@@ -98,6 +98,40 @@ export default builder
             clearTimeout(timeout);
           };
         }, [state.isEditing]);
+        const handleSave = React.useCallback(async () => {
+          const src = signatureRef.current?.toDataURL() || "";
+          const signed_at = new Date();
+          const message = await openpgp.createMessage({
+            text: JSON.stringify({ src, signed_at, form_id: formId }),
+          });
+          let signature = "unsigned";
+          try {
+            const keypair = localStorage.getItem("keypair");
+            const serializedKeypair = JSON.parse(
+              keypair || ""
+            ) as openpgp.SerializedKeyPair<string> & {
+              revocationCertificate: string;
+            };
+
+            const detached = await openpgp.sign({
+              message,
+              signingKeys: await openpgp.readPrivateKey({
+                armoredKey: serializedKeypair.privateKey,
+              }),
+              detached: true,
+            });
+            signature = detached as string;
+          } catch (error) {
+            console.error(error);
+          }
+
+          props.form.setValue(props.node.name, {
+            src,
+            signature,
+            signed_at,
+          });
+          setState({ isEditing: false });
+        }, [formId, props.form, props.node.name]);
         const value = props.form.getValues(props.node.name);
         return (
           <div>
@@ -122,42 +156,7 @@ export default builder
                     >
                       Clear
                     </Button>
-                    <Button
-                      size="small"
-                      type="primary"
-                      onClick={async () => {
-                        const src = signatureRef.current?.toDataURL() || "";
-                        const message = await openpgp.createMessage({
-                          text: src,
-                        });
-                        let signature = "[unsigned]";
-                        try {
-                          const keypair = localStorage.getItem("keypair");
-                          const serializedKeypair = JSON.parse(
-                            keypair || ""
-                          ) as openpgp.SerializedKeyPair<string> & {
-                            revocationCertificate: string;
-                          };
-
-                          const detached = await openpgp.sign({
-                            message,
-                            signingKeys: await openpgp.readPrivateKey({
-                              armoredKey: serializedKeypair.privateKey,
-                            }),
-                            detached: true,
-                          });
-                          signature = detached as string;
-                        } catch (error) {
-                          console.error(error);
-                        }
-
-                        props.form.setValue(props.node.name, {
-                          src,
-                          signature,
-                        });
-                        setState({ isEditing: false });
-                      }}
-                    >
+                    <Button size="small" type="primary" onClick={handleSave}>
                       Save
                     </Button>
                   </Space>
