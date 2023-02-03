@@ -5,6 +5,7 @@ import {
   Input,
   Popconfirm,
   Popover,
+  Radio,
   Row,
   Select,
   Space,
@@ -92,13 +93,14 @@ function FieldCreationPopover(props: {
             form.reset();
           }}
         >
-          <Form.Item label="Field name">
+          <Form.Item>
             <Controller
               control={form.control}
               name="name"
               render={(input) => {
                 return (
                   <Input
+                    placeholder="Enter field name"
                     value={input.field.value}
                     onChange={input.field.onChange}
                     onBlur={input.field.onBlur}
@@ -107,18 +109,27 @@ function FieldCreationPopover(props: {
               }}
             />
           </Form.Item>
-          <Form.Item label="Field type">
+          <Form.Item>
             <Controller
               control={form.control}
               name="type"
               render={(input) => {
                 return (
-                  <Select
+                  <Radio.Group
                     value={input.field.value}
                     onChange={input.field.onChange}
                     onBlur={input.field.onBlur}
-                    options={fieldTypes}
-                  />
+                    defaultValue="a"
+                    size="small"
+                  >
+                    {fieldTypes.map((f) => {
+                      return (
+                        <Radio.Button key={f.value} value={f.value}>
+                          {f.label}
+                        </Radio.Button>
+                      );
+                    })}
+                  </Radio.Group>
                 );
               }}
             />

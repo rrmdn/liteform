@@ -3,7 +3,7 @@ import { Controller } from "react-hook-form";
 import builder from "./builder";
 
 export default builder
-  .from({ value: "", options: { max: 50, input: "textarea" } })
+  .from({ value: "", options: { max: 50, input: "input" } })
   .build(
     () => ({
       OptionsEditor: (props) => {
