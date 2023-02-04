@@ -33,9 +33,8 @@ export default function LiteForm() {
   const submitResponse = useMutation({
     mutationFn: async (response: LiteformResponse) => {
       const responseRef = doc(collections.responses, response.id);
-      console.log(response);
       await setDoc(responseRef, response);
-      router.push(`/responses?id=${response.id}`);
+      router.push(`/response?id=${response.id}`);
     },
   });
   const handleSubmit = React.useCallback(() => {

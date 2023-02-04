@@ -68,7 +68,7 @@ const defaultValue = {
   src: "",
   signature: "unsigned",
   signed_at: new Date(),
-  signed_by: undefined as string | undefined,
+  signed_by: "",
 };
 
 export default builder
@@ -153,7 +153,7 @@ export default builder
             src,
             signature,
             signed_at,
-            signed_by: user?.uid,
+            signed_by: user?.uid || "unknown",
           });
           setState({ isEditing: false });
         }, [formId, props.form, props.node.name, user?.uid]);
