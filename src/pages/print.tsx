@@ -1,7 +1,5 @@
 import { Skeleton } from "antd";
 import React from "react";
-import qs from "qs";
-import { Type } from "@sinclair/typebox";
 import {
   FormContext,
   LiteformForm,
@@ -35,7 +33,7 @@ function FormLoader() {
       formActions.setMode(LiteformMode.RESPONSE);
       setTimeout(() => {
         window.print();
-      }, 1000);
+      }, 5000);
     });
   }, []);
   if (mode === "EDIT") return <Skeleton />;

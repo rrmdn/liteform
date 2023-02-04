@@ -2,13 +2,38 @@ import { Button, Col, Form, Input, Row, Space } from "antd";
 import React from "react";
 import { Controller } from "react-hook-form";
 import SignaturePad from "signature_pad";
-import * as openpgp from "openpgp/lightweight";
 import builder from "./builder";
 import { FormContext } from "../LiteformContext";
+import Signature from "../../signature";
+import UserContext from "../UserContext";
+import { useQuery } from "react-query";
 
 function RenderSignature(props: Partial<typeof defaultValue>) {
+  const formId = FormContext.useSelectState((state) => state.form.id);
+  const { src, signed_at, signature, signed_by } = props;
+  const isVerified = useQuery(
+    ["isVerified", signed_by, src, signed_at, formId, signature],
+    async () => {
+      if (!signed_by || !signature) return false;
+      const verified = await Signature.verify(
+        { src, signed_at, form_id: formId },
+        signature,
+        signed_by
+      );
+      return verified;
+    }
+  );
   return (
-    <div style={{ position: "relative", width: 300, height: 150 }}>
+    <div
+      style={{
+        position: "relative",
+        width: 300,
+        height: 150,
+        border: isVerified.data ? "1px solid #73d13d" : "1px solid #d9d9d9",
+        borderRadius: 4,
+        overflow: "hidden",
+      }}
+    >
       <img src={props.src} style={{ width: 300, height: 150 }} />
       <div
         style={{
@@ -26,15 +51,25 @@ function RenderSignature(props: Partial<typeof defaultValue>) {
         }}
       >
         <pre>{props.signature || "unsigned"}</pre>
-        <pre style={{ position: "absolute", bottom: 10, right: 10, left: 10 }}>
-          {props?.signed_at?.toISOString()}
-        </pre>
+        <div style={{ position: "absolute", bottom: 10, right: 10, left: 10 }}>
+          <pre>
+            {props?.signed_at?.toISOString()}{" "}
+            {isVerified.data ? (
+              <span style={{ color: "#73d13d" }}>[VERIFIED]</span>
+            ) : null}
+          </pre>
+        </div>
       </div>
     </div>
   );
 }
 
-const defaultValue = { src: "", signature: "unsigned", signed_at: new Date() };
+const defaultValue = {
+  src: "",
+  signature: "unsigned",
+  signed_at: new Date(),
+  signed_by: undefined as string | undefined,
+};
 
 export default builder
   .from({
@@ -86,6 +121,7 @@ export default builder
         const [state, setState] = React.useState({
           isEditing: false,
         });
+        const user = UserContext.useSelectState((state) => state.user);
         React.useEffect(() => {
           const timeout = setTimeout(() => {
             if (!canvasRef.current) return;
@@ -101,26 +137,14 @@ export default builder
         const handleSave = React.useCallback(async () => {
           const src = signatureRef.current?.toDataURL() || "";
           const signed_at = new Date();
-          const message = await openpgp.createMessage({
-            text: JSON.stringify({ src, signed_at, form_id: formId }),
-          });
           let signature = "unsigned";
           try {
-            const keypair = localStorage.getItem("keypair");
-            const serializedKeypair = JSON.parse(
-              keypair || ""
-            ) as openpgp.SerializedKeyPair<string> & {
-              revocationCertificate: string;
-            };
-
-            const detached = await openpgp.sign({
-              message,
-              signingKeys: await openpgp.readPrivateKey({
-                armoredKey: serializedKeypair.privateKey,
-              }),
-              detached: true,
-            });
-            signature = detached as string;
+            if (user?.uid) {
+              signature = await Signature.generate(
+                { src, signed_at, form_id: formId },
+                user?.uid
+              );
+            }
           } catch (error) {
             console.error(error);
           }
@@ -129,9 +153,10 @@ export default builder
             src,
             signature,
             signed_at,
+            signed_by: user?.uid,
           });
           setState({ isEditing: false });
-        }, [formId, props.form, props.node.name]);
+        }, [formId, props.form, props.node.name, user?.uid]);
         const value = props.form.getValues(props.node.name);
         return (
           <div>

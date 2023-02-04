@@ -1,20 +1,13 @@
 import "antd/dist/reset.css";
 import {
   ConfigProvider,
-  Layout,
-  Menu,
-  Breadcrumb,
-  Typography,
   Button,
   Space,
   Col,
   Row,
-  Modal,
   Popover,
   Avatar,
   Dropdown,
-  Tag,
-  Tooltip,
 } from "antd";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -24,8 +17,10 @@ import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import UserContext from "../app/components/UserContext";
 import { AppProps } from "next/app";
 import React from "react";
-import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-import firebase from "../app/firebase";
+import * as openpgp from "openpgp/lightweight";
+import { QueryClient, QueryClientProvider } from "react-query";
+import firebase, { db } from "../app/firebase";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +30,41 @@ const Navigation = () => {
   const userActions = UserContext.useActions();
   React.useEffect(() => {
     firebase.auth().onIdTokenChanged((user) => {
+      const keypair = localStorage.getItem("keypair");
+      if (!keypair && user) {
+        openpgp
+          .generateKey({
+            type: "ecc",
+            curve: "curve25519",
+            userIDs: [
+              {
+                name: user.displayName || "",
+                email: user.email || user.uid || "",
+              },
+            ],
+          })
+          .then((key) => {
+            localStorage.setItem("keypair", JSON.stringify(key));
+            return key;
+          })
+          .then(async function savePublicKey(key) {
+            const profilesRef = collection(db, "profiles");
+            const profile = {
+              id: user.uid,
+              keys: {
+                publicKey: key.publicKey,
+              },
+            };
+            setDoc(doc(profilesRef, profile.id), profile);
+          })
+          .catch((err) => {
+            localStorage.removeItem("keypair");
+            throw err;
+          });
+      }
+      if (!user) {
+        localStorage.removeItem("keypair");
+      }
       userActions.setUser(user);
     });
   }, []);

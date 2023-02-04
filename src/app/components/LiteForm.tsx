@@ -1,13 +1,9 @@
 import { Button, Form, Row, Space, Typography } from "antd";
 import { useForm } from "react-hook-form";
 import "./fields/loader";
-import { FormContext, LiteformMode } from "./LiteformContext";
+import { FormContext } from "./LiteformContext";
 import FormLoader from "./FormLoader";
 import LiteformInput from "./LiteformInput";
-import React from "react";
-import * as openpgp from "openpgp/lightweight";
-import { nanoid } from "nanoid";
-import { app } from "../firebase";
 
 export default function LiteForm() {
   const fields = FormContext.useSelectState((state) => state.form.fields);
@@ -26,26 +22,6 @@ export default function LiteForm() {
     ),
     mode: "onChange",
   });
-  React.useEffect(function generateKeypairIfNotExist() {
-    const keypair = localStorage.getItem("keypair");
-    if (!keypair) {
-      openpgp
-        .generateKey({
-          type: "ecc",
-          curve: "curve25519",
-          userIDs: [
-            {
-              name: "Liteform",
-              email:
-                app.auth().currentUser?.email || `${nanoid()}@liteform.digital`,
-            },
-          ],
-        })
-        .then((key) => {
-          localStorage.setItem("keypair", JSON.stringify(key));
-        });
-    }
-  }, []);
   return (
     <>
       <FormLoader />
@@ -56,7 +32,7 @@ export default function LiteForm() {
           const printWindow = window.open(
             `/print`,
             "_blank",
-            "location=yes,height=570,width=640,scrollbars=yes,status=yes"
+            "location=yes,scrollbars=yes,status=yes"
           );
           printWindow?.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {

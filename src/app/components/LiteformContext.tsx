@@ -27,18 +27,20 @@ export type LiteformForm = {
   owner: Identity;
 };
 
-export const LiteformCompiler = TypeCompiler.Compile(Type.Object({
-  id: Type.String(),
-  name: Type.String(),
-  description: Type.String(),
-  source: Type.Array(Type.Any()),
-  fields: Type.Record(Type.String(), Type.Any()),
-  owner: Type.Object({
-    email: Type.String(),
-    name: Type.String(),
+export const LiteformCompiler = TypeCompiler.Compile(
+  Type.Object({
     id: Type.String(),
-  }),
-}))
+    name: Type.String(),
+    description: Type.String(),
+    source: Type.Array(Type.Any()),
+    fields: Type.Record(Type.String(), Type.Any()),
+    owner: Type.Object({
+      email: Type.String(),
+      name: Type.String(),
+      id: Type.String(),
+    }),
+  })
+);
 
 export type LiteformResponse = {
   id: string;
@@ -153,6 +155,16 @@ export const defaultForm: LiteformForm = {
     {
       type: "paragraph",
       children: [
+        {
+          field_id: "signature",
+          type: "field",
+          children: [{ text: "[SIGNATURE]" }],
+        },
+      ],
+    },
+    {
+      type: "paragraph",
+      children: [
         { text: "________________________________________ (Sign Here)" },
       ],
     },
@@ -222,6 +234,12 @@ export const defaultForm: LiteformForm = {
       name: "end_date",
       type: "date",
     },
+    signature: {
+      id: "signature",
+      type: "signature",
+      name: "SIGNATURE",
+      options: { width: 300, height: 100 },
+    },
   },
   owner: { email: "", name: "", id: "" },
 };
@@ -234,7 +252,7 @@ export const defaultResponse: LiteformResponse = {
   respondent: {
     email: "",
     name: "",
-    id: ""
+    id: "",
   },
 };
 
