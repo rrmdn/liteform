@@ -68,7 +68,7 @@ export default function Home(props: { forms: LiteformForm[] }) {
               </Button>{" "}
               button. Choose any field type from the dropdown. For example, you
               can add a dropdown field with options like "Yes" and "No". You can
-              also add a text field, a date field, a number field, and more.
+              also add a text field, a date field, a signature field, and more.
             </Typography.Paragraph>
             <Typography.Paragraph style={{ fontSize: 16 }}>
               When you are done with the form. You can click the{" "}
@@ -88,6 +88,8 @@ export default function Home(props: { forms: LiteformForm[] }) {
               style={{
                 width: "100%",
                 borderRadius: 4,
+                border: "1px solid #eee",
+                boxShadow: "0 0 8px rgba(0,0,0,0.06)",
               }}
               src="/images/build-printable-form.png"
             />
@@ -100,6 +102,8 @@ export default function Home(props: { forms: LiteformForm[] }) {
               style={{
                 width: "100%",
                 borderRadius: 4,
+                border: "1px solid #eee",
+                boxShadow: "0 0 8px rgba(0,0,0,0.06)",
               }}
               src="/images/fill-the-form.png"
             />
@@ -143,7 +147,8 @@ export default function Home(props: { forms: LiteformForm[] }) {
             <img
               style={{
                 width: "100%",
-                borderRadius: 6,
+                borderRadius: 4,
+                boxShadow: "0 0 8px rgba(0,0,0,0.06)",
               }}
               src="/images/print-the-form.png"
             />
