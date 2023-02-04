@@ -46,6 +46,7 @@ export type LiteformResponse = {
   id: string;
   responses: any;
   respondent: Identity;
+  responded_at: Date;
 };
 
 export const defaultForm: LiteformForm = {
@@ -254,6 +255,7 @@ export const defaultResponse: LiteformResponse = {
     name: "",
     id: "",
   },
+  responded_at: new Date(),
 };
 
 export enum LiteformMode {

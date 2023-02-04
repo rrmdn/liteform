@@ -7,6 +7,7 @@ import {
 } from "../app/components/LiteformContext";
 import { LiteformRichText } from "../app/components/LiteformEditor";
 import { nanoid } from "nanoid";
+import dayjs from "dayjs";
 
 function FormLoader() {
   const mode = FormContext.useSelectState((state) => state.mode);
@@ -19,6 +20,7 @@ function FormLoader() {
       if (action !== "LOAD_FORM_RESPONSE") return;
       const form = data.form as LiteformForm;
       const values = data.values as Record<string, any>;
+      const responded_at = dayjs(data.responded_at).toDate();
 
       formActions.setForm(form);
       formActions.setResponse({
@@ -26,9 +28,10 @@ function FormLoader() {
         respondent: {
           name: "",
           email: "",
-          id: ""
+          id: "",
         },
         responses: values,
+        responded_at,
       });
       formActions.setMode(LiteformMode.RESPONSE);
       setTimeout(() => {
