@@ -43,6 +43,7 @@ export default class FactoryBuilder {
           id: Math.random().toString(36).substr(2, 9),
           options: defaults.options,
           value: defaults.value,
+          default: defaults.value,
           ...metadata,
         };
         const Factory: Factory<TOpt, TVal> = {

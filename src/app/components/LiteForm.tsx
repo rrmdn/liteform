@@ -30,6 +30,18 @@ export default function LiteForm() {
     ) as Record<string, any>,
     mode: "onChange",
   });
+
+  React.useEffect(() => {
+    form.reset(
+      Object.values(fields).reduce(
+        (values, field) => ({
+          ...values,
+          [field.name]: field.default,
+        }),
+        {}
+      )
+    );
+  }, [fields]);
   const submitResponse = useMutation({
     mutationFn: async (response: LiteformResponse) => {
       const responseRef = doc(collections.responses, response.id);

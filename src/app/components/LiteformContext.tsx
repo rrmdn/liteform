@@ -161,6 +161,7 @@ export const defaultForm: LiteformForm = {
           type: "field",
           children: [{ text: "[SIGNATURE]" }],
         },
+        { text: " " },
       ],
     },
     {
