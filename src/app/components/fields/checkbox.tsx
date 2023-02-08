@@ -19,7 +19,6 @@ export default builder.from({ value: false, options: {} }).build(
       );
     },
     ValueRenderer: (props) => {
-      console.log(props.node.value);
       return <span {...props.attributes}>{props.node.value === true ? "🗹" : "☐"}</span>;
     },
   }),

@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "build:static": "NODE_ENV=production next build && next export",
-    "deploy": "build:static && firebase deploy"
+    "deploy": "yarn build:static && surge out liteform.digital"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.5.6",
