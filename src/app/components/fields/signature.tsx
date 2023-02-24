@@ -7,10 +7,17 @@ import { FormContext } from "../LiteformContext";
 import Signature from "../../signature";
 import UserContext from "../UserContext";
 import { useQuery } from "react-query";
+import { Timestamp } from "firebase/firestore";
 
 function RenderSignature(props: Partial<typeof defaultValue>) {
   const formId = FormContext.useSelectState((state) => state.form.id);
-  const { src, signed_at, signature, signed_by } = props;
+  const { src, signature, signed_by } = props;
+  const signed_at = React.useMemo(() => {
+    if (props.signed_at instanceof Timestamp) {
+      return props.signed_at.toDate();
+    }
+    return props.signed_at;
+  }, [props.signed_at]);
   const isVerified = useQuery(
     ["isVerified", signed_by, src, signed_at, formId, signature],
     async () => {
@@ -23,6 +30,7 @@ function RenderSignature(props: Partial<typeof defaultValue>) {
       return verified;
     }
   );
+
   return (
     <div
       style={{
@@ -53,7 +61,7 @@ function RenderSignature(props: Partial<typeof defaultValue>) {
         <pre>{props.signature || "unsigned"}</pre>
         <div style={{ position: "absolute", bottom: 10, right: 10, left: 10 }}>
           <pre>
-            {props?.signed_at?.toISOString()}{" "}
+            {signed_at?.toISOString()}{" "}
             {isVerified.data ? (
               <span style={{ color: "#73d13d" }}>[VERIFIED]</span>
             ) : null}

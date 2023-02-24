@@ -63,6 +63,25 @@ const ResponseLoader = () => {
     });
   }, [form]);
 
+  const handleDownload = React.useCallback(() => {
+    if (!rawResponse) return;
+    const el = document.createElement("a");
+    el.setAttribute(
+      "href",
+      `data:text/plain;charset=utf-8,${encodeURIComponent(
+        JSON.stringify({ form, response: rawResponse }, null, 2)
+      )}`
+    );
+    el.setAttribute(
+      "download",
+      `form-${form.id}-response-${rawResponse.id}.json`
+    );
+    el.style.display = "none";
+    document.body.appendChild(el);
+    el.click();
+    document.body.removeChild(el);
+  }, [rawResponse, form]);
+
   if (response.isLoading) return <Skeleton />;
   if (response.isError) return <div>Something went wrong</div>;
   if (!response.data) return <div>Response not found</div>;
@@ -86,6 +105,9 @@ const ResponseLoader = () => {
           <Button size="small" type="primary" onClick={handleShare}>
             Share
           </Button>
+          <Button size="small" type="primary" onClick={handleDownload}>
+            Download
+          </Button>
         </Space>
       </Col>
       <Col span={24}>
@@ -101,7 +123,7 @@ export default function Response() {
       style={{
         maxWidth: 1024,
         margin: "0 auto",
-        padding: "16px 0",
+        padding: "16px",
       }}
     >
       <div style={{ height: 52 }}></div>

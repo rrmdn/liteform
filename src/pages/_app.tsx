@@ -1,4 +1,5 @@
 import "antd/dist/reset.css";
+import "./main.css";
 import {
   ConfigProvider,
   Button,
@@ -104,7 +105,7 @@ const Navigation = () => {
                   LITEFORM
                 </Button>
               </Link>
-              <Link href="/#examples">
+              <Link className="nav-item" href="/#examples">
                 <Button
                   style={{ color: "#666", fontWeight: "500" }}
                   type="link"
@@ -113,7 +114,7 @@ const Navigation = () => {
                   Examples
                 </Button>
               </Link>
-              <Link href="/editor">
+              <Link className="nav-item" href="/editor">
                 <Button
                   style={{ color: "#666", fontWeight: "500" }}
                   type="link"
@@ -122,7 +123,7 @@ const Navigation = () => {
                   Editor
                 </Button>
               </Link>
-              <Link href="/form">
+              <Link className="nav-item" href="/form">
                 <Button
                   style={{ color: "#666", fontWeight: "500" }}
                   type="link"
